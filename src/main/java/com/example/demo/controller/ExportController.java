@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.Facture;
 import com.example.demo.service.ClientService;
+import com.example.demo.service.ExportService;
 import com.example.demo.service.FactureService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -34,22 +35,14 @@ public class ExportController {
     private ClientService clientService;
     @Autowired
     private FactureService factureService;
+    @Autowired
+    private ExportService exportService;
 
     @GetMapping("/clients/csv")
     public void clientsCSV(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"clients.csv\"");
-        PrintWriter writer = response.getWriter();
-        List<Client> allClients = clientService.findAllClients();
-        LocalDate now = LocalDate.now();
-        writer.println("Id" + ";" + "Nom" + ";" + "Prenom" + ";" + "Date de Naissance");
-
-        for (Client client : allClients) {
-            writer.println(client.getId() + ";"
-                    + client.getNom() + ";"
-                    + client.getPrenom() + ";"
-                    + client.getDateNaissance().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")));
-        }
+        exportService.clientsCSV(response.getWriter());
     }
 
     @GetMapping("/clients/xlsx")
