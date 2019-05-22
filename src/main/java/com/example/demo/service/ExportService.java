@@ -30,7 +30,6 @@ public class ExportService {
     @Autowired
     private FactureService factureService;
 
-    @GetMapping("/clients/csv")
     public void clientsCSV(Writer writer) throws IOException {
         PrintWriter printWriter = new PrintWriter(writer);
         List<Client> allClients = clientService.findAllClients();
@@ -45,32 +44,25 @@ public class ExportService {
         }
     }
 
-    @GetMapping("/clients/xlsx")
     public void clientsXLSX(Workbook workbook, List<Client> allClients, HttpServletResponse response) throws IOException {
         Sheet sheet = workbook.createSheet("Clients");
         Row headerRow = sheet.createRow(0);
 
-        Cell cellId = headerRow.createCell(0);
-        cellId.setCellValue("Id");
+        headerRow.createCell(0).setCellValue("Id");
 
-        Cell cellPrenom = headerRow.createCell(1);
-        cellPrenom.setCellValue("Prénom");
+        headerRow.createCell(1).setCellValue("Prénom");
 
-        Cell cellNom = headerRow.createCell(2);
-        cellNom.setCellValue("Nom");
+        headerRow.createCell(2).setCellValue("Nom");
 
         int iRow = 1;
         for (Client client : allClients) {
             Row row = sheet.createRow(iRow);
 
-            Cell id = row.createCell(0);
-            id.setCellValue(client.getId());
+            row.createCell(0).setCellValue(client.getId());
 
-            Cell prenom = row.createCell(1);
-            prenom.setCellValue(client.getPrenom());
+            row.createCell(1).setCellValue(client.getPrenom());
 
-            Cell nom = row.createCell(2);
-            nom.setCellValue(client.getNom());
+            row.createCell(2).setCellValue(client.getNom());
 
             iRow = iRow + 1;
         }
@@ -78,13 +70,8 @@ public class ExportService {
         workbook.close();
     }
 
-    @GetMapping("/clients/{id}/factures/xlsx")
-    public void factureXLSXByClient(@PathVariable("id") Long clientId, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; filename=\"factures-client-" + clientId + ".xlsx\"");
-        List<Facture> factures = factureService.findFacturesClient(clientId);
 
-        Workbook workbook = new XSSFWorkbook();
+    public void factureXLSXByClient(Workbook workbook, HttpServletResponse response, List<Facture> factures) throws IOException {
         Sheet sheet = workbook.createSheet("Facture");
         Row headerRow = sheet.createRow(0);
 
@@ -98,11 +85,9 @@ public class ExportService {
         for (Facture facture : factures) {
             Row row = sheet.createRow(iRow);
 
-            Cell id = row.createCell(0);
-            id.setCellValue(facture.getId());
+            row.createCell(0).setCellValue(facture.getId());
 
-            Cell prenom = row.createCell(1);
-            prenom.setCellValue(facture.getTotal());
+            row.createCell(1).setCellValue(facture.getTotal());
 
             iRow = iRow + 1;
         }

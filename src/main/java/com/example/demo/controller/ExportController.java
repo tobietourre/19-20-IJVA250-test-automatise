@@ -63,28 +63,6 @@ public class ExportController {
         List<Facture> factures = factureService.findFacturesClient(clientId);
 
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Facture");
-        Row headerRow = sheet.createRow(0);
-
-        Cell cellId = headerRow.createCell(0);
-        cellId.setCellValue("Id");
-
-        Cell cellTotal = headerRow.createCell(1);
-        cellTotal.setCellValue("Prix Total");
-
-        int iRow = 1;
-        for (Facture facture : factures) {
-            Row row = sheet.createRow(iRow);
-
-            Cell id = row.createCell(0);
-            id.setCellValue(facture.getId());
-
-            Cell prenom = row.createCell(1);
-            prenom.setCellValue(facture.getTotal());
-
-            iRow = iRow + 1;
-        }
-        workbook.write(response.getOutputStream());
-        workbook.close();
+        exportService.factureXLSXByClient(workbook, response, factures);
     }
 }
