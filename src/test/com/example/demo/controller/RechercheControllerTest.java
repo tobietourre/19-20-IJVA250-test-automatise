@@ -17,6 +17,7 @@ import java.util.Collections;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.containsString;
 
 
 import static org.junit.Assert.*;
@@ -54,7 +55,9 @@ public class RechercheControllerTest {
 
         when(mockArticleService.find("pad")).thenReturn(Arrays.asList(ipad, paddle));
         mvc.perform(get("/recherche?query=pad"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("ipad")))
+                .andExpect(content().string(containsString("paddle")));
         Mockito.verify(mockArticleService).find("pad");
     }
 }
