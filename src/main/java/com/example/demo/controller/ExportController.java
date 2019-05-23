@@ -33,10 +33,10 @@ public class ExportController {
 
     @Autowired
     private ClientService clientService;
+
     @Autowired
     private FactureService factureService;
 
-    @Autowired
     private ExportService exportService;
 
     @GetMapping("/clients/csv")
